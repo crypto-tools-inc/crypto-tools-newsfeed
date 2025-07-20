@@ -6,6 +6,40 @@ const supabase = createClient("https://krperkqbaqewikgzuoea.supabase.co", "eyJhb
 // Store current feeds data
 let currentFeeds = [];
 
+// Function to get relative time
+function getRelativeTime(date) {
+  const now = new Date();
+  const publishedDate = new Date(date);
+  const diffInSeconds = Math.floor((now - publishedDate) / 1000);
+
+  if (diffInSeconds < 60) {
+    return diffInSeconds <= 1 ? "just now" : `${diffInSeconds} seconds ago`;
+  }
+
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60) {
+    return diffInMinutes === 1 ? "1 minute ago" : `${diffInMinutes} minutes ago`;
+  }
+
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) {
+    return diffInHours === 1 ? "1 hour ago" : `${diffInHours} hours ago`;
+  }
+
+  const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays < 30) {
+    return diffInDays === 1 ? "1 day ago" : `${diffInDays} days ago`;
+  }
+
+  const diffInMonths = Math.floor(diffInDays / 30);
+  if (diffInMonths < 12) {
+    return diffInMonths === 1 ? "1 month ago" : `${diffInMonths} months ago`;
+  }
+
+  const diffInYears = Math.floor(diffInMonths / 12);
+  return diffInYears === 1 ? "1 year ago" : `${diffInYears} years ago`;
+}
+
 // Function to render feeds
 function renderFeeds(feeds) {
   const feedContainer = document.getElementById("feeds");
@@ -18,7 +52,7 @@ function renderFeeds(feeds) {
         </div>
       <p>${entry.summary}</p>
       <div class="d-flex justify-content-between">
-        <p class="text-muted">Published on: ${new Date(entry.pub_date).toLocaleDateString()}</p>
+        <p class="text-muted">${getRelativeTime(entry.pub_date)}</p>
         <p class="text-muted">${entry.source}</p>
       </div>
     </a>`;
@@ -117,6 +151,11 @@ async function init() {
     const channel = setupRealtimeSubscription();
 
     console.log("News feed initialized with realtime updates");
+
+    // Update relative times every minute
+    setInterval(() => {
+      renderFeeds(currentFeeds);
+    }, 60000); // Update every minute
 
     // Optional: Handle page unload to clean up subscription
     window.addEventListener("beforeunload", () => {
