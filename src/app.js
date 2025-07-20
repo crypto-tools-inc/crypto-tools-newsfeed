@@ -6,6 +6,93 @@ const supabase = createClient("https://krperkqbaqewikgzuoea.supabase.co", "eyJhb
 // Store current feeds data
 let currentFeeds = [];
 
+// Function to generate sentiment progress bar
+function generateSentimentProgressBar(sentimentCounts) {
+  const { positive = 0, neutral = 0, negative = 0 } = sentimentCounts;
+  const total = positive + neutral + negative;
+
+  if (total === 0) {
+    return '<div class="progress mb-3"><div class="progress-bar bg-secondary" style="width: 100%">No data</div></div>';
+  }
+
+  const positivePercent = Math.round((positive / total) * 100);
+  const neutralPercent = Math.round((neutral / total) * 100);
+  const negativePercent = Math.round((negative / total) * 100);
+
+  // Ensure percentages add up to 100% (handle rounding)
+  let adjustedPercents = [positivePercent, neutralPercent, negativePercent];
+  const sum = adjustedPercents.reduce((a, b) => a + b, 0);
+  if (sum !== 100 && total > 0) {
+    adjustedPercents[0] += 100 - sum;
+  }
+
+  let progressBarHTML = '<div class="progress mb-3" style="height: 25px;">';
+
+  if (adjustedPercents[0] > 0) {
+    progressBarHTML += `
+      <div class="progress-bar bg-success" 
+           style="width: ${adjustedPercents[0]}%" 
+           data-bs-toggle="tooltip" 
+           title="Positive: ${positive} (${adjustedPercents[0]}%)">
+        ${adjustedPercents[0] > 15 ? adjustedPercents[0] + "%" : ""}
+      </div>`;
+  }
+
+  if (adjustedPercents[1] > 0) {
+    progressBarHTML += `
+      <div class="progress-bar bg-warning" 
+           style="width: ${adjustedPercents[1]}%" 
+           data-bs-toggle="tooltip" 
+           title="Neutral: ${neutral} (${adjustedPercents[1]}%)">
+        ${adjustedPercents[1] > 15 ? adjustedPercents[1] + "%" : ""}
+      </div>`;
+  }
+
+  if (adjustedPercents[2] > 0) {
+    progressBarHTML += `
+      <div class="progress-bar bg-danger" 
+           style="width: ${adjustedPercents[2]}%" 
+           data-bs-toggle="tooltip" 
+           title="Negative: ${negative} (${adjustedPercents[2]}%)">
+        ${adjustedPercents[2] > 15 ? adjustedPercents[2] + "%" : ""}
+      </div>`;
+  }
+
+  progressBarHTML += "</div>";
+
+  // Add legend
+  progressBarHTML += `
+    <div class="d-flex justify-content-between small text-muted mb-3">
+      <span><i class="text-success">●</i> Positive: ${positive} (${adjustedPercents[0]}%)</span>
+      <span><i class="text-warning">●</i> Neutral: ${neutral} (${adjustedPercents[1]}%)</span>
+      <span><i class="text-danger">●</i> Negative: ${negative} (${adjustedPercents[2]}%)</span>
+    </div>`;
+
+  return progressBarHTML;
+}
+
+// Function to calculate sentiment counts from current feeds
+function calculateSentimentCounts(feeds) {
+  const sentimentCounts = {
+    positive: 0,
+    neutral: 0,
+    negative: 0,
+  };
+
+  feeds.forEach((feed) => {
+    const sentiment = feed.sentiment?.toLowerCase();
+    if (sentiment === "positive") {
+      sentimentCounts.positive++;
+    } else if (sentiment === "neutral") {
+      sentimentCounts.neutral++;
+    } else if (sentiment === "negative") {
+      sentimentCounts.negative++;
+    }
+  });
+
+  return sentimentCounts;
+}
+
 // Function to get relative time
 function getRelativeTime(date) {
   const now = new Date();
@@ -43,7 +130,18 @@ function getRelativeTime(date) {
 // Function to render feeds
 function renderFeeds(feeds) {
   const feedContainer = document.getElementById("feeds");
-  let feed = "";
+
+  // Generate sentiment overview
+  const sentimentCounts = calculateSentimentCounts(feeds);
+  const sentimentProgressBar = generateSentimentProgressBar(sentimentCounts);
+
+  let feed = `
+    <div class="sentiment-overview mb-4">
+      <h6 class="mb-2">Overall Sentiment Analysis (${feeds.length} articles)</h6>
+      ${sentimentProgressBar}
+    </div>
+  `;
+
   feeds.forEach((entry) => {
     feed += `<a href="${entry.link}" target="_blank" class="list-group-item list-group-item-action">
         <div class="d-flex justify-content-between align-items-center">
@@ -61,6 +159,14 @@ function renderFeeds(feeds) {
     </a>`;
   });
   feedContainer.innerHTML = feed;
+
+  // Initialize Bootstrap tooltips for the progress bars
+  if (typeof bootstrap !== "undefined") {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  }
 }
 
 // Function to add new feed to the beginning of the list
