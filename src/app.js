@@ -47,13 +47,16 @@ function renderFeeds(feeds) {
   feeds.forEach((entry) => {
     feed += `<a href="${entry.link}" target="_blank" class="list-group-item list-group-item-action">
         <div class="d-flex justify-content-between align-items-center">
-        <h5>${entry.title}</h5>
+        <h6>${entry.title}</h6>
         <span class="badge bg-${entry.sentiment} text-capitalize">${entry.sentiment}</span>
         </div>
-      <p>${entry.summary}</p>
+      <p class="m-0 small">${entry.summary}</p>
       <div class="d-flex justify-content-between">
-        <p class="text-muted">${getRelativeTime(entry.pub_date)}</p>
-        <p class="text-muted">${entry.source}</p>
+        <p class="m-0 small text-muted">${getRelativeTime(entry.pub_date)}</p>
+        <div class="d-flex align-items-center">
+        <img src="src/img/${entry.source}.png" width="14" height="14" alt="${entry.source}" class="img-fluid me-2">
+        <p class="m-0 text-muted text-capitalize small">${entry.source}</p>
+        </div>
       </div>
     </a>`;
   });
