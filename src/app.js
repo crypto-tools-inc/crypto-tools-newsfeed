@@ -12,7 +12,7 @@ function generateSentimentProgressBar(sentimentCounts) {
   const total = positive + neutral + negative;
 
   if (total === 0) {
-    return '<div class="progress mb-3"><div class="progress-bar bg-secondary" style="width: 100%">No data</div></div>';
+    return '<div class="progress"><div class="progress-bar bg-secondary" style="width: 100%">No data</div></div>';
   }
 
   const positivePercent = Math.round((positive / total) * 100);
@@ -26,7 +26,7 @@ function generateSentimentProgressBar(sentimentCounts) {
     adjustedPercents[0] += 100 - sum;
   }
 
-  let progressBarHTML = '<div class="progress mb-3" style="height: 25px;">';
+  let progressBarHTML = '<div class="progress mb-1" style="height: 25px;">';
 
   if (adjustedPercents[0] > 0) {
     progressBarHTML += `
@@ -62,7 +62,7 @@ function generateSentimentProgressBar(sentimentCounts) {
 
   // Add legend
   progressBarHTML += `
-    <div class="d-flex justify-content-between small text-muted mb-3">
+    <div class="d-flex justify-content-between small text-muted">
       <span><i class="text-success">●</i> Positive: ${positive} (${adjustedPercents[0]}%)</span>
       <span><i class="text-warning">●</i> Neutral: ${neutral} (${adjustedPercents[1]}%)</span>
       <span><i class="text-danger">●</i> Negative: ${negative} (${adjustedPercents[2]}%)</span>
@@ -137,7 +137,7 @@ function renderFeeds(feeds) {
 
   let feed = `
     <div class="sentiment-overview mb-4">
-      <h6 class="mb-2">Overall Sentiment Analysis (${feeds.length} articles)</h6>
+      <h6 class="mb-2">Overall Sentiment Analysis</h6>
       ${sentimentProgressBar}
     </div>
   `;
