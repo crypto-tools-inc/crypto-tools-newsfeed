@@ -4,14 +4,29 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
+    <title>Crypto Tools Newsfeed</title>
   </head>
   <body>
+    <!-- Crypto Price Carousel Navbar -->
+    <nav class="navbar navbar-expand-lg crypto-carousel fixed-top">
+      <div class="container-fluid">
+        <div class="update-indicator" id="lastUpdate">Loading...</div>
+        <div class="loading-spinner" id="loadingSpinner">
+          <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+          Loading crypto prices...
+        </div>
+        <div class="crypto-ticker" id="cryptoTicker" style="display: none">
+          <!-- Crypto prices will be populated here -->
+        </div>
+      </div>
+    </nav>
+
     <div class="container py-4 px-3 mx-auto">
       <h1>Feed</h1>
       <ul id="feeds" class="list-group list-group-flush"></ul>
     </div>
     <script type="module" src="/src/app.js"></script>
+    <script type="module" src="/src/prices-carousel.js"></script>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
