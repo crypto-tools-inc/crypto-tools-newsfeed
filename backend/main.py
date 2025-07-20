@@ -4,6 +4,7 @@ from datetime import datetime
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from supabase import create_client, Client
 from bs4 import BeautifulSoup
+from urllib.parse import urlparse
 from dotenv import load_dotenv
 import os
 
@@ -41,6 +42,13 @@ def get_sentiment(text: str) -> str:
 # 🔍 Helper: hash for deduplication
 def generate_entry_hash(title: str, link: str, pub_date: str) -> str:
     return hashlib.sha256(f"{title}{link}{pub_date}".encode("utf-8")).hexdigest()
+
+
+def get_source_name(feed_url: str) -> str:
+    parsed = urlparse(feed_url)
+    domain = parsed.netloc.replace("www.", "")  # e.g., 'decrypt.co'
+    return domain.split('.')[0]  # 'decrypt'
+
 
 def remove_unwanted_html(html: str) -> str:
     soup = BeautifulSoup(html, "html.parser")
@@ -91,7 +99,7 @@ def fetch_and_process():
                 "sentiment": sentiment,
                 "hash": entry_hash,
                 "tags": tags,
-                "source": feed_url  # ✅ New column
+                "source": get_source_name(feed_url)
             }).execute()
 
             print(f"Inserted: {title} from {feed_url}")
