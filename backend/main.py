@@ -3,6 +3,7 @@ import hashlib
 from datetime import datetime
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from supabase import create_client, Client
+from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 import os
 
@@ -38,13 +39,21 @@ def get_sentiment(text: str) -> str:
 def generate_entry_hash(title: str, link: str, pub_date: str) -> str:
     return hashlib.sha256(f"{title}{link}{pub_date}".encode("utf-8")).hexdigest()
 
+def remove_images(html: str) -> str:
+    soup = BeautifulSoup(html, "html.parser")
+    for img in soup.find_all("img"):
+        img.decompose()  # remove the image tag
+    return soup.get_text()  # return cleaned plain text
+
+
 # 🚀 Fetch and insert entries
 def fetch_and_process():
     for feed_url in FEEDS:
         parsed = feedparser.parse(feed_url)
         for entry in parsed.entries:
             title = entry.get("title", "")
-            summary = entry.get("summary", "")
+            raw_summary = entry.get("summary", "")
+            summary = remove_images(raw_summary)
             link = entry.get("link", "")
             pub_date_raw = entry.get("published", "") or entry.get("updated", "")
             pub_date = datetime(*entry.published_parsed[:6]).isoformat() if entry.get("published_parsed") else None
