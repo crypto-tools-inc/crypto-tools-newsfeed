@@ -19,7 +19,10 @@ FEEDS = [
     "https://decrypt.co/feed",
     "https://dailyhodl.com/feed/",
     "https://cointelegraph.com/feed",
-    "https://coindoo.com/feed/"
+    "https://coindoo.com/feed/",
+    "https://www.coindesk.com/arc/outboundfeeds/rss",
+    "https://u.today/rss.php",
+    "https://coingape.com/feed/"
 ]
 
 # 🔌 INIT
