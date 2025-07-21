@@ -23,7 +23,8 @@ FEEDS = [
     "https://coindoo.com/feed/",
     "https://www.coindesk.com/arc/outboundfeeds/rss",
     "https://u.today/rss.php",
-    "https://coingape.com/feed/"
+    "https://coingape.com/feed/",
+    "https://thedefiant.io/api/feed"
 ]
 
 # 🔌 INIT
@@ -46,9 +47,16 @@ def generate_entry_hash(title: str, link: str, pub_date: str) -> str:
 
 def get_source_name(feed_url: str) -> str:
     parsed = urlparse(feed_url)
-    domain = parsed.netloc.replace("www.", "")  # e.g., 'decrypt.co'
-    return domain.split('.')[0]  # 'decrypt'
+    domain = parsed.netloc.replace("www.", "")  # Remove www
 
+    parts = domain.split('.')
+
+    # If there's a subdomain: return subdomain + domain
+    if len(parts) > 2:
+        return ".".join(parts[:-1])  # Drop TLD
+    else:
+        return parts[0]  # Just the domain without TLD
+    
 
 def remove_unwanted_html(html: str) -> str:
     soup = BeautifulSoup(html, "html.parser")
@@ -99,7 +107,7 @@ def fetch_and_process():
                 "sentiment": sentiment,
                 "hash": entry_hash,
                 "tags": tags,
-                "source": get_source_name(feed_url)
+                "source": get_source_name(feed_url).replace('.', '-')
             }).execute()
 
             print(f"Inserted: {title} from {feed_url}")
