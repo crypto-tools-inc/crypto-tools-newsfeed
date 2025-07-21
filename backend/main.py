@@ -24,7 +24,8 @@ FEEDS = [
     "https://www.coindesk.com/arc/outboundfeeds/rss",
     "https://u.today/rss.php",
     "https://coingape.com/feed/",
-    "https://thedefiant.io/api/feed"
+    "https://thedefiant.io/api/feed",
+    "https://unchainedcrypto.com/feed/"
 ]
 
 # 🔌 INIT
