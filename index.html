@@ -7,35 +7,38 @@
     <title>Crypto Tools Newsfeed</title>
   </head>
   <body>
-    <!-- Crypto Price Carousel Navbar -->
-    <nav class="navbar navbar-expand-lg crypto-carousel fixed-top">
-      <div class="container-fluid">
-        <div class="update-indicator" id="lastUpdate">Loading...</div>
-        <div class="loading-spinner" id="loadingSpinner">
-          <div class="spinner-border spinner-border-sm me-2" role="status"></div>
-          Loading crypto prices...
+    <div class="vh-100">
+      <nav class="navbar navbar-expand-lg crypto-carousel">
+        <div class="container-fluid">
+          <div class="update-indicator" id="lastUpdate">Loading...</div>
+          <div class="loading-spinner" id="loadingSpinner">
+            <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+            Loading crypto prices...
+          </div>
+          <div class="crypto-ticker" id="cryptoTicker" style="display: none"></div>
         </div>
-        <div class="crypto-ticker" id="cryptoTicker" style="display: none">
-          <!-- Crypto prices will be populated here -->
-        </div>
-      </div>
-    </nav>
+      </nav>
 
-    <div class="container-fluid">
-      <div class="row">
+      <div class="container-fluid h-100 pb-4">
         <h1>Feed</h1>
-
-        <div class="col-md-6">
-          <ul id="feeds" class="list-group list-group-flush"></ul>
+        <div class="row border-bottom">
+          <div id="sentiment-overview" class="col-md-8"></div>
+          <div id="fear-and-greed" class="col-md-4"></div>
         </div>
-        <div class="col-md-6">
-          <div class="w-100 h-100 bg-secondary"></div>
+        <div class="row h-100">
+          <div class="col-md-12 h-100 overflow-scroll">
+            <div class="h-100 overflow-scroll">
+              <ul id="feeds" class="list-group list-group-flush"></ul>
+            </div>
+          </div>
+          <!-- <div class="col-md-6 h-100">
+            <div class="w-100 h-100 bg-secondary"></div>
+          </div> -->
         </div>
       </div>
     </div>
     <script type="module" src="/src/app.js"></script>
     <script type="module" src="/src/prices-carousel.js"></script>
-    <script type="module" src="/src/cmc.js"></script>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

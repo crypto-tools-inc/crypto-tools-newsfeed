@@ -26,7 +26,7 @@ function generateSentimentProgressBar(sentimentCounts) {
     adjustedPercents[0] += 100 - sum;
   }
 
-  let progressBarHTML = '<div class="progress mb-1" style="height: 25px;">';
+  let progressBarHTML = '<div class="progress mb-1" style="height: 20px;">';
 
   if (adjustedPercents[0] > 0) {
     progressBarHTML += `
@@ -130,17 +130,22 @@ function getRelativeTime(date) {
 // Function to render feeds
 function renderFeeds(feeds) {
   const feedContainer = document.getElementById("feeds");
+  const sentimentOverview = document.getElementById("sentiment-overview");
 
   // Generate sentiment overview
   const sentimentCounts = calculateSentimentCounts(feeds);
   const sentimentProgressBar = generateSentimentProgressBar(sentimentCounts);
 
-  let feed = `
-    <div class="sentiment-overview mb-4">
+  let sentiment = `
+    <div class="mb-2">
       <h6 class="mb-2">Overall Sentiment Analysis</h6>
       ${sentimentProgressBar}
     </div>
   `;
+
+  sentimentOverview.innerHTML = sentiment;
+
+  let feed = "";
 
   feeds.forEach((entry) => {
     feed += `<a href="${entry.link}" target="_blank" class="list-group-item list-group-item-action">
@@ -181,6 +186,28 @@ function addNewFeed(newEntry) {
 
   // Re-render the feeds
   renderFeeds(currentFeeds);
+}
+
+async function loadFearAndGreedIndex() {
+  try {
+    const { data, error } = await supabase.from("fear_greed_history").select().order("created_at", { ascending: false }).limit(1);
+
+    if (error) {
+      console.error("Error fetching Fear and Greed Index:", error);
+      return;
+    }
+    if (data && data.length > 0) {
+      const index = data[0];
+      const fearAndGreedContainer = document.getElementById("fear-and-greed");
+      fearAndGreedContainer.innerHTML = `
+        <h6 class="mb-2">Fear and greed index</h6>
+        <input class="fag-gauge" type="range" min="0" max="100" value="${index.value}" disabled />
+        <span class="text-muted small">${index.classification} ${index.value}</span>
+        `;
+    }
+  } catch (error) {
+    console.error("Error fetching Fear and Greed Index:", error);
+  }
 }
 
 // Initial data fetch
@@ -255,6 +282,7 @@ async function init() {
   try {
     // Load initial data
     await loadInitialData();
+    await loadFearAndGreedIndex();
 
     // Set up realtime subscription
     const channel = setupRealtimeSubscription();
