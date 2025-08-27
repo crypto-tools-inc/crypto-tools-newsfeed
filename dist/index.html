@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crypto Tools Newsfeed</title>
+    <script type="module" crossorigin src="/assets/index-BAFkeZYh.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CqCgevlD.css">
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="/assets/logo-jDcmsgU0.svg" alt="Crypto Tools" height="38" />
+        </a>
+      </div>
+    </nav>
+    <div class="vh-100">
+      <nav class="navbar navbar-expand-lg crypto-carousel">
+        <div class="container-fluid">
+          <div class="update-indicator" id="lastUpdate">Loading...</div>
+          <div class="loading-spinner" id="loadingSpinner">
+            <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+            Loading crypto prices...
+          </div>
+          <div class="crypto-ticker" id="cryptoTicker" style="display: none"></div>
+        </div>
+      </nav>
+
+      <div class="container-fluid h-100 pb-4">
+        <div class="row border-bottom">
+          <div id="sentiment-overview" class="col-md-8"></div>
+          <div id="fear-and-greed" class="col-md-4"></div>
+        </div>
+        <div class="row h-100">
+          <div class="col-md-12 h-100 overflow-scroll">
+            <div class="h-100 overflow-scroll">
+              <ul id="feeds" class="list-group list-group-flush"></ul>
+            </div>
+          </div>
+          <!-- <div class="col-md-6 h-100">
+            <div class="w-100 h-100 bg-secondary"></div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
