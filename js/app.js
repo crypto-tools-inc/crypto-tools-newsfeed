@@ -1,7 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
-
-// Create a single supabase client for interacting with your database
-const supabase = createClient("https://krperkqbaqewikgzuoea.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtycGVya3FiYXFld2lrZ3p1b2VhIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODAzMzU4NzcsImV4cCI6MTk5NTkxMTg3N30.ZiwrLZyY8lHlLspcVIagKrF5Bdci_R95lKpDDK56xHM");
+const client = supabase.createClient("https://krperkqbaqewikgzuoea.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtycGVya3FiYXFld2lrZ3p1b2VhIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODAzMzU4NzcsImV4cCI6MTk5NTkxMTg3N30.ZiwrLZyY8lHlLspcVIagKrF5Bdci_R95lKpDDK56xHM");
 
 // Store current feeds data
 let currentFeeds = [];
@@ -157,7 +154,7 @@ function renderFeeds(feeds) {
       <div class="d-flex justify-content-between">
         <p class="m-0 small text-muted">${getRelativeTime(entry.pub_date)}</p>
         <div class="d-flex align-items-center">
-        <img src="src/img/${entry.source}.png" width="14" height="14" alt="${entry.source}" class="img-fluid me-2">
+        <img src="/img/${entry.source}.png" width="14" height="14" alt="${entry.source}" class="img-fluid me-2">
         <p class="m-0 text-muted text-capitalize small">${entry.source}</p>
         </div>
       </div>
@@ -190,7 +187,7 @@ function addNewFeed(newEntry) {
 
 async function loadFearAndGreedIndex() {
   try {
-    const { data, error } = await supabase.from("fear_greed_history").select().order("created_at", { ascending: false }).limit(1);
+    const { data, error } = await client.from("fear_greed_history").select().order("created_at", { ascending: false }).limit(1);
 
     if (error) {
       console.error("Error fetching Fear and Greed Index:", error);
@@ -213,7 +210,7 @@ async function loadFearAndGreedIndex() {
 // Initial data fetch
 async function loadInitialData() {
   try {
-    const { data, error } = await supabase.from("news_entries").select().order("pub_date", { ascending: false }).limit(100);
+    const { data, error } = await client.from("news_entries").select().order("pub_date", { ascending: false }).limit(100);
 
     if (error) {
       console.error("Error fetching initial data:", error);
@@ -231,7 +228,7 @@ async function loadInitialData() {
 
 // Set up realtime subscription
 function setupRealtimeSubscription() {
-  const channel = supabase
+  const channel = client
     .channel("news_entries_changes")
     .on(
       "postgres_changes",
@@ -296,7 +293,7 @@ async function init() {
 
     // Optional: Handle page unload to clean up subscription
     window.addEventListener("beforeunload", () => {
-      supabase.removeChannel(channel);
+      client.removeChannel(channel);
     });
   } catch (error) {
     console.error("Error initializing news feed:", error);
