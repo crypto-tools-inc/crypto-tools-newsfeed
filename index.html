@@ -2,11 +2,18 @@
 <html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Crypto Tools Newsfeed</title>
   </head>
   <body>
+    <nav class="navbar">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="src/img/logo.svg" alt="Crypto Tools" height="38" />
+        </a>
+      </div>
+    </nav>
     <div class="vh-100">
       <nav class="navbar navbar-expand-lg crypto-carousel">
         <div class="container-fluid">
@@ -20,7 +27,6 @@
       </nav>
 
       <div class="container-fluid h-100 pb-4">
-        <h1>Feed</h1>
         <div class="row border-bottom">
           <div id="sentiment-overview" class="col-md-8"></div>
           <div id="fear-and-greed" class="col-md-4"></div>
