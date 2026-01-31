@@ -353,7 +353,9 @@ HEADER
 ============================================================================= */
 .header {
   height: 250px;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0) 100%), url("../img/jumbotron/bg-green.png") no-repeat center center;
+  background:
+    linear-gradient(to right, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0) 100%),
+    url("../img/jumbotron/bg-green.png") no-repeat center center;
   background-size: cover;
 }
 
@@ -611,12 +613,12 @@ NEWS
   font-size: 12px;
 }
 
-.positive {
-  color: #22c55e;
+.bg-positive {
+  background-color: #22c55e;
 }
 
-.negative {
-  color: #ef4444;
+.bg-negative {
+  background-color: #ef4444;
 }
 
 @keyframes scroll {
